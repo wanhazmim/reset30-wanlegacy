@@ -1,0 +1,19 @@
+name: reset30_app
+description: A habit tracking app based on Atomic Habits
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_chart: ^0.55.2
+# flutter_local_notifications: ^13.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
