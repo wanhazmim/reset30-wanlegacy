@@ -1,4 +1,4 @@
-name: reset30_app
+name: code30_app
 description: CODE30 - A Duolingo-style coding learning app for beginners
 publish_to: 'none'
 version: 1.0.0+1

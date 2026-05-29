@@ -127,7 +127,7 @@ class _WelcomePage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Aplikasi pembelajaran coding bergaya Duolingo.\nBelajar coding dalam Bahasa Malaysia & English.\nSelesaikan satu pelajaran setiap hari!',
+            'Aplikasi pembelajaran coding premium berinspirasikan Duolingo, Mimo dan Codecademy.\nBelajar coding dalam Bahasa Malaysia & English.\nBina streak, capai misi harian, dan kuasai kod secara interaktif!',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
           ),
