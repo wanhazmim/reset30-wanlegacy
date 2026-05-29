@@ -13,8 +13,8 @@ class Reset30App extends StatelessWidget {
     return MaterialApp(
       title: 'RESET30',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
-        useMaterial3: false,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+        useMaterial3: true,
       ),
       home: const DashboardScreen(),
       debugShowCheckedModeBanner: false,

@@ -12,7 +12,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
+  static const List<Widget> _screens = [
     HabitScreen(),
     ProgressChart(),
   ];
@@ -23,14 +23,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text('RESET30'),
         centerTitle: true,
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
       ),
       body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.checklist), label: 'Habits'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Progress'),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.checklist), label: 'Habits'),
+          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'Progress'),
         ],
       ),
     );
