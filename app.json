@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "CODE30",
+    "slug": "code30",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D9488"
+    },
+    "android": {
+      "package": "com.wanlegacy.code30",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0D9488"
+      }
+    },
+    "platforms": ["android"]
+  }
+}
