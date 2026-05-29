@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                 return null;
               }
             })
-            .whereType<dynamic>()
+            .whereType<Achievement>()
             .toList();
 
         return Scaffold(
@@ -335,7 +335,7 @@ class HomeScreen extends StatelessWidget {
                       itemCount: recentAchievements.length,
                       separatorBuilder: (_, __) => const SizedBox(width: 10),
                       itemBuilder: (context, i) {
-                        final a = recentAchievements[i] as dynamic;
+                        final a = recentAchievements[i];
                         return Container(
                           width: 130,
                           padding: const EdgeInsets.all(10),

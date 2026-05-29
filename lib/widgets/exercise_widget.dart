@@ -474,8 +474,9 @@ class _ArrangeExerciseState extends State<ArrangeExercise> {
         ),
         const SizedBox(height: 16),
         // Arranged so far
-        Container(
-          min_height: 60,
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 60),
+          child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
@@ -510,6 +511,7 @@ class _ArrangeExerciseState extends State<ArrangeExercise> {
                     );
                   }).toList(),
                 ),
+          ),
         ),
         const SizedBox(height: 16),
         Wrap(
@@ -625,7 +627,6 @@ class _CodeBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -644,10 +645,4 @@ class _CodeBlock extends StatelessWidget {
       ),
     );
   }
-}
-
-// ignore this helper for min_height
-extension on Container {
-  // ignore: unused_element
-  double get min_height => 0;
 }
