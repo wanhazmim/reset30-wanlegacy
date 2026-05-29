@@ -22,10 +22,10 @@ const List<Unit> allUnits = [
             emoji: '📄',
             titleBM: 'Bahasa markup',
             titleEN: 'Markup language',
-            bodyBM: 'HTML (HyperText Markup Language) digunakan untuk menyusun kandungan halaman web.
-
+            bodyBM: 'HTML (HyperText Markup Language) digunakan untuk menyusun kandungan halaman web... ", 
+            
 Tag HTML memberitahu pelayar apa yang patut dipaparkan.',
-            bodyEN: 'HTML (HyperText Markup Language) is used to structure web page content.
+            bodyEN: 'HTML (HyperText Markup Language) is used to structure web page content... ", 
 
 HTML tags tell the browser what to display.',
           ),
