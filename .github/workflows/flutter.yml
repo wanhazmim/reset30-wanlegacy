@@ -20,13 +20,6 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Generate Android project files
-        run: |
-          flutter create --platforms android --org com.wanlegacy --project-name reset30 /tmp/scaffold
-          rm -rf android
-          cp -r /tmp/scaffold/android .
-          chmod +x android/gradlew
-
       - name: Install dependencies
         run: flutter pub get
 

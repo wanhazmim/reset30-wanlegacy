@@ -209,6 +209,8 @@ class UserProvider extends ChangeNotifier {
     if (completed.isNotEmpty) tryUnlock('first_lesson');
     if (completed.length >= 5) tryUnlock('lessons_5');
     if (completed.length >= 10) tryUnlock('lessons_10');
+    if (completed.length >= 30) tryUnlock('lessons_30');
+    if (completed.length >= 60) tryUnlock('lessons_60');
 
     final totalLessons = allUnits.fold<int>(0, (s, u) => s + u.lessons.length);
     if (completed.length >= totalLessons) tryUnlock('lessons_all');
@@ -217,11 +219,13 @@ class UserProvider extends ChangeNotifier {
     if (_user.streak >= 7) tryUnlock('streak_7');
     if (_user.streak >= 14) tryUnlock('streak_14');
     if (_user.streak >= 30) tryUnlock('streak_30');
+    if (_user.streak >= 60) tryUnlock('streak_60');
 
     final level = getLevel();
     if (level >= 5) tryUnlock('level_5');
 
     if (_user.xp >= 500) tryUnlock('xp_500');
+    if (_user.xp >= 1000) tryUnlock('xp_1000');
 
     if (newOnes.isNotEmpty) {
       _user = _user.copyWith(unlockedAchievements: unlocked);
@@ -241,16 +245,19 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<MapEntry<String, int>> getLast30DaysXP() {
+  List<MapEntry<String, int>> getLastDaysXP(int days) {
     final result = <MapEntry<String, int>>[];
     final now = DateTime.now();
-    for (int i = 29; i >= 0; i--) {
+    final range = days.clamp(1, 90);
+    for (int i = range - 1; i >= 0; i--) {
       final date = now.subtract(Duration(days: i));
       final key = _dateKey(date);
       result.add(MapEntry(key, _user.dailyHistory[key] ?? 0));
     }
     return result;
   }
+
+  List<MapEntry<String, int>> getLast30DaysXP() => getLastDaysXP(30);
 
   int getTotalActiveDays() {
     return _user.dailyHistory.values.where((v) => v > 0).length;

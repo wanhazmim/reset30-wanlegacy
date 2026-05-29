@@ -26,6 +26,11 @@ class HomeScreen extends StatelessWidget {
         // Next lesson
         final nextLesson =
             courseProvider.getNextLesson(user.completedLessons);
+        final totalLessons = courseProvider.totalLessons();
+        final completedCount = user.completedLessons.length;
+        final pathProgress = totalLessons > 0
+            ? completedCount / totalLessons
+            : 0.0;
 
         // Today's date string
         final now = DateTime.now();
@@ -136,6 +141,99 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
+                // Premium hero card
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary.withOpacity(0.18),
+                        theme.colorScheme.primaryContainer.withOpacity(0.12),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: theme.colorScheme.primary.withOpacity(0.18)),
+                  ),
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              isBM ? 'PRO' : 'PREMIUM',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              isBM
+                                  ? 'Belajar coding seperti aplikasi terbaik di dunia.'
+                                  : 'Learn code with the best premium experience.',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      Text(
+                        isBM
+                            ? 'Kuasai kemahiran, bina streak, dan dapatkan ganjaran XP setiap hari.'
+                            : 'Master skills, build your streak, and earn XP every day.',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.8)),
+                      ),
+                      const SizedBox(height: 14),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          _buildFeatureChip(
+                              context,
+                              isBM ? 'Misi Harian' : 'Daily Mission'),
+                          _buildFeatureChip(
+                              context,
+                              isBM ? 'Cabaran Kod' : 'Code Challenges'),
+                          _buildFeatureChip(
+                              context,
+                              isBM ? 'Sesi Interaktif' : 'Interactive Sessions'),
+                        ],
+                      ),
+                      const SizedBox(height: 18),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 14, horizontal: 24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: Text(
+                          isBM ? 'Terokai Premium' : 'Explore Premium',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 // Hearts + XP Row
                 Row(
                   children: [
@@ -221,12 +319,12 @@ class HomeScreen extends StatelessWidget {
                               ),
                               Text(
                                 completedToday
-                                    ? (isBM
-                                        ? 'Selesai hari ini! ✅'
-                                        : 'Done for today! ✅')
-                                    : (isBM
-                                        ? 'Selesaikan 1 pelajaran hari ini'
-                                        : 'Complete 1 lesson today'),
+                                  ? (isBM
+                                      ? 'Tugas pembelajaran hari ini selesai! ✅'
+                                      : 'Today’s learning mission is done! ✅')
+                                  : (isBM
+                                      ? 'Capai misi harian: 1 pelajaran'
+                                      : 'Hit today’s mission: 1 lesson'),
                                 style: theme.textTheme.bodySmall,
                               ),
                             ],
@@ -235,6 +333,55 @@ class HomeScreen extends StatelessWidget {
                         if (completedToday)
                           const Icon(Icons.check_circle,
                               color: Colors.green, size: 28),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Learning path card
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  elevation: 0,
+                  color: theme.colorScheme.primaryContainer.withOpacity(0.12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isBM ? 'Jalan Pembelajaran' : 'Learning Path',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          isBM
+                              ? 'Kuasai HTML, CSS dan JavaScript secara bergaya.'
+                              : 'Master HTML, CSS and JavaScript step by step.',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 14),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: LinearProgressIndicator(
+                            value: pathProgress,
+                            minHeight: 12,
+                            backgroundColor:
+                                theme.colorScheme.surfaceVariant,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                theme.colorScheme.primary),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          isBM
+                              ? 'Anda telah menyelesaikan $completedCount daripada $totalLessons pelajaran.'
+                              : 'You completed $completedCount of $totalLessons lessons.',
+                          style: theme.textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ),
@@ -416,6 +563,70 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                // Simple leaderboard
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  color: theme.colorScheme.surface,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isBM ? 'Papan Pendahulu' : 'Leaderboard',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary),
+                        ),
+                        const SizedBox(height: 12),
+                        ...[
+                          {'name': isBM ? 'Kamu' : 'You', 'xp': user.xp, 'streak': user.streak, 'rank': 1},
+                          {'name': isBM ? 'Aisyah' : 'Aisyah', 'xp': (user.xp + 40), 'streak': user.streak + 2, 'rank': 2},
+                          {'name': isBM ? 'Imran' : 'Imran', 'xp': (user.xp + 20), 'streak': user.streak + 1, 'rank': 3},
+                        ].map((item) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: theme.colorScheme.primary.withOpacity(0.16),
+                                  child: Text(
+                                    '${item['rank']}',
+                                    style: TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item['name'] as String,
+                                        style: theme.textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        '${item['xp']} XP • ${item['streak']} ${isBM ? 'hari streak' : 'day streak'}',
+                                        style: theme.textTheme.bodySmall?.copyWith(
+                                            color: theme.colorScheme.onSurface.withOpacity(0.65)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -423,4 +634,22 @@ class HomeScreen extends StatelessWidget {
       },
     );
   }
+}
+
+Widget _buildFeatureChip(BuildContext context, String text) {
+  final theme = Theme.of(context);
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    decoration: BoxDecoration(
+      color: theme.colorScheme.primary.withOpacity(0.14),
+      borderRadius: BorderRadius.circular(14),
+    ),
+    child: Text(
+      text,
+      style: theme.textTheme.bodySmall?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: theme.colorScheme.onSurface,
+      ),
+    ),
+  );
 }
