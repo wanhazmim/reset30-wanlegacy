@@ -19,6 +19,30 @@ const List<Unit> allUnits = [
         descEN: 'Learn what coding and computer programs are.',
         emoji: '🤔',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '🖥️',
+            titleBM: 'Apa itu Coding?',
+            titleEN: 'What is Coding?',
+            bodyBM: 'Coding (atau pengaturcaraan) adalah cara kita memberi ARAHAN kepada komputer.\n\nSama seperti kita bagi arahan kepada orang — "pergi ke kedai, beli susu" — kita bagi arahan kepada komputer menggunakan bahasa khas yang difahaminya.',
+            bodyEN: 'Coding (or programming) is how we give INSTRUCTIONS to a computer.\n\nJust like we give instructions to people — "go to the shop, buy milk" — we give instructions to the computer using a special language it understands.',
+          ),
+          LearnSlide(
+            emoji: '🗣️',
+            titleBM: 'Bahasa Pengaturcaraan',
+            titleEN: 'Programming Languages',
+            bodyBM: 'Komputer tidak faham bahasa Melayu atau Inggeris. Ia memerlukan bahasa khas seperti:\n\n🐍 Python — mudah untuk pemula\n☕ JavaScript — untuk laman web\n📱 Dart — untuk apps phone\n\nDalam kursus ini, kita akan guna Python sebagai contoh!',
+            bodyEN: 'Computers don\'t understand Malay or English. They need special languages like:\n\n🐍 Python — easy for beginners\n☕ JavaScript — for websites\n📱 Dart — for phone apps\n\nIn this course, we\'ll use Python as examples!',
+          ),
+          LearnSlide(
+            emoji: '👋',
+            titleBM: 'Program Pertama Kamu',
+            titleEN: 'Your First Program',
+            bodyBM: 'Program paling mudah dalam dunia adalah "Hello, World!" — ia hanya mencetak teks ke skrin.\n\nCuba tengok kod di bawah. Ia memberitahu komputer: "Tunjukkan perkataan Hello, World!"',
+            bodyEN: 'The simplest program in the world is "Hello, World!" — it just prints text to the screen.\n\nLook at the code below. It tells the computer: "Show the words Hello, World!"',
+            codeExample: '# Program pertama saya\nprint("Hello, World!")\n\n# Output:\n# Hello, World!',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u1l1e1',
@@ -103,6 +127,31 @@ const List<Unit> allUnits = [
         descEN: 'Understand the concept of variables in programming.',
         emoji: '📦',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '📦',
+            titleBM: 'Apa itu Pemboleh Ubah?',
+            titleEN: 'What is a Variable?',
+            bodyBM: 'Bayangkan pemboleh ubah sebagai sebuah KOTAK berlabel.\n\nKotak itu boleh menyimpan sebarang nilai — nombor, nama, atau teks. Label pada kotak itu adalah NAMA pemboleh ubah kita.',
+            bodyEN: 'Think of a variable as a labeled BOX.\n\nThe box can store any value — a number, a name, or some text. The label on the box is the NAME of our variable.',
+          ),
+          LearnSlide(
+            emoji: '✏️',
+            titleBM: 'Cara Buat Pemboleh Ubah',
+            titleEN: 'How to Create a Variable',
+            bodyBM: 'Dalam Python, cara paling mudah untuk buat pemboleh ubah adalah:\n\n  nama = nilai\n\nTanda "=" bermakna "SIMPAN nilai ini dalam pemboleh ubah ini".',
+            bodyEN: 'In Python, the easiest way to create a variable is:\n\n  name = value\n\nThe "=" sign means "STORE this value in this variable".',
+            codeExample: '# Simpan umur saya\numur = 20\n\n# Simpan nama saya\nnama = "Ali"\n\n# Cetak nilai\nprint(umur)   # Output: 20\nprint(nama)   # Output: Ali',
+          ),
+          LearnSlide(
+            emoji: '🔄',
+            titleBM: 'Ubah Nilai Pemboleh Ubah',
+            titleEN: 'Changing Variable Values',
+            bodyBM: 'Nilai dalam pemboleh ubah boleh DIUBAH pada bila-bila masa. Itulah sebabnya ia dipanggil "pemboleh ubah" — nilainya boleh berubah!',
+            bodyEN: 'The value in a variable can be CHANGED at any time. That\'s why it\'s called a "variable" — its value can vary!',
+            codeExample: '# Mula dengan 10\npoin = 10\nprint(poin)   # Output: 10\n\n# Kemas kini kepada 25\npoin = 25\nprint(poin)   # Output: 25',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u1l2e1',
@@ -185,6 +234,32 @@ const List<Unit> allUnits = [
         descEN: 'Learn about different data types in programming.',
         emoji: '🔢',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '🔢',
+            titleBM: 'Nombor (Integer & Float)',
+            titleEN: 'Numbers (Integer & Float)',
+            bodyBM: 'Dalam pengaturcaraan, ada DUA jenis nombor:\n\n• Integer (int) — nombor BULAT tanpa titik perpuluhan\n• Float — nombor dengan titik perpuluhan\n\nGuna int untuk kiraan, float untuk ukuran tepat.',
+            bodyEN: 'In programming, there are TWO types of numbers:\n\n• Integer (int) — WHOLE numbers without decimal point\n• Float — numbers WITH decimal point\n\nUse int for counting, float for precise measurements.',
+            codeExample: 'umur = 20          # int\ntinggi = 1.75      # float\nprint(type(umur))  # <class "int">\nprint(type(tinggi))# <class "float">',
+          ),
+          LearnSlide(
+            emoji: '📝',
+            titleBM: 'Teks (String)',
+            titleEN: 'Text (String)',
+            bodyBM: 'String adalah jenis data untuk menyimpan TEKS — perkataan, ayat, atau sebarang aksara.\n\nString sentiasa ditulis di dalam tanda petik " " atau \' \'.',
+            bodyEN: 'String is the data type for storing TEXT — words, sentences, or any characters.\n\nStrings are always written inside quotation marks " " or \' \'.',
+            codeExample: 'nama = "Ahmad"\nsalam = \'Hello, World!\'\n\nprint(nama)   # Ahmad\nprint(salam)  # Hello, World!',
+          ),
+          LearnSlide(
+            emoji: '✅',
+            titleBM: 'Benar/Palsu (Boolean)',
+            titleEN: 'True/False (Boolean)',
+            bodyBM: 'Boolean hanya ada DUA nilai: True atau False.\n\nIa digunakan apabila kita perlu membuat KEPUTUSAN dalam program — contohnya, adakah pengguna sudah log masuk?',
+            bodyEN: 'Boolean only has TWO values: True or False.\n\nIt\'s used when we need to make DECISIONS in a program — for example, is the user logged in?',
+            codeExample: 'sudah_makan = True\nhujan = False\n\nprint(sudah_makan)  # True\nprint(hujan)        # False',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u1l3e1',
@@ -262,6 +337,15 @@ const List<Unit> allUnits = [
         descEN: 'Test your understanding of coding basics!',
         emoji: '🏆',
         xpReward: 30,
+        slides: [
+          LearnSlide(
+            emoji: '🏆',
+            titleBM: 'Masa untuk Cabaran!',
+            titleEN: 'Time for a Challenge!',
+            bodyBM: 'Tahniah kerana berjaya habiskan Unit 1!\n\nSekarang kita akan uji semua yang telah kamu pelajari:\n✅ Apa itu coding\n✅ Pemboleh ubah\n✅ Jenis data\n\nSiap? Jom mulakan!',
+            bodyEN: 'Congratulations for completing Unit 1!\n\nNow let\'s test everything you\'ve learned:\n✅ What is coding\n✅ Variables\n✅ Data types\n\nReady? Let\'s go!',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u1l4e1',
@@ -347,6 +431,31 @@ const List<Unit> allUnits = [
         descEN: 'Understand boolean logic in programming.',
         emoji: '✅',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '🔘',
+            titleBM: 'Boolean — Hanya Dua Nilai',
+            titleEN: 'Boolean — Only Two Values',
+            bodyBM: 'Boolean adalah jenis data yang paling mudah — ia hanya ada DUA nilai:\n\n• True (Betul)\n• False (Salah)\n\nIa digunakan untuk mewakili keadaan ya/tidak, hidup/mati, ada/tiada.',
+            bodyEN: 'Boolean is the simplest data type — it only has TWO values:\n\n• True\n• False\n\nIt is used to represent yes/no, on/off, exist/not exist states.',
+            codeExample: 'lampu_hidup = True\nhujan = False\n\nprint(lampu_hidup)  # True\nprint(hujan)        # False',
+          ),
+          LearnSlide(
+            emoji: '⚡',
+            titleBM: 'Operator Logik',
+            titleEN: 'Logical Operators',
+            bodyBM: 'Ada 3 operator logik utama:\n\n• AND — kedua-dua mesti True\n• OR — sekurang-kurangnya satu True\n• NOT — membalikkan nilai',
+            bodyEN: 'There are 3 main logical operators:\n\n• AND — both must be True\n• OR — at least one must be True\n• NOT — reverses the value',
+            codeExample: 'print(True and False)  # False\nprint(True or False)   # True\nprint(not True)        # False',
+          ),
+          LearnSlide(
+            emoji: '🧩',
+            titleBM: 'Boolean dalam Kehidupan',
+            titleEN: 'Boolean in Real Life',
+            bodyBM: 'Kita guna logik boolean setiap hari tanpa sedar!\n\nContoh:\n• Lampu isyarat: Hijau = True (boleh jalan)\n• ATM: Kod betul = True (boleh masuk)\n• Pintu automatik: Ada orang = True (buka)',
+            bodyEN: 'We use boolean logic every day without realizing it!\n\nExamples:\n• Traffic light: Green = True (can go)\n• ATM: Correct PIN = True (can enter)\n• Automatic door: Person detected = True (open)',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u2l1e1',
@@ -422,6 +531,31 @@ const List<Unit> allUnits = [
         descEN: 'Learn how to make decisions in code.',
         emoji: '🤷',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '🚦',
+            titleBM: 'Membuat Keputusan',
+            titleEN: 'Making Decisions',
+            bodyBM: 'Program komputer perlu membuat KEPUTUSAN — macam manusia juga!\n\n"JIKA hujan, MAKA bawa payung. JIKA tidak, pakai topi."\n\nDalam kod, kita guna pernyataan IF untuk buat keputusan ini.',
+            bodyEN: 'Computer programs need to make DECISIONS — just like humans!\n\n"IF it rains, THEN bring an umbrella. IF NOT, wear a hat."\n\nIn code, we use the IF statement to make these decisions.',
+          ),
+          LearnSlide(
+            emoji: '📋',
+            titleBM: 'Cara Tulis If/Else',
+            titleEN: 'How to Write If/Else',
+            bodyBM: 'Format asas:\n\nif syarat:\n    lakukan ini\nelse:\n    lakukan itu\n\nPerhatikan: kod di dalam if/else perlu ada inden (tab) supaya Python tahu ia di dalam blok tersebut.',
+            bodyEN: 'Basic format:\n\nif condition:\n    do this\nelse:\n    do that\n\nNote: code inside if/else needs indentation (tab) so Python knows it\'s inside that block.',
+            codeExample: 'umur = 18\n\nif umur >= 18:\n    print("Boleh mengundi!")\nelse:\n    print("Belum boleh mengundi.")',
+          ),
+          LearnSlide(
+            emoji: '🔗',
+            titleBM: 'Elif — Lebih Banyak Syarat',
+            titleEN: 'Elif — More Conditions',
+            bodyBM: 'Kalau ada BANYAK syarat, kita guna "elif" (else if):\n\nif syarat1:\n    ...\nelif syarat2:\n    ...\nelse:\n    ...',
+            bodyEN: 'If there are MANY conditions, we use "elif" (else if):\n\nif condition1:\n    ...\nelif condition2:\n    ...\nelse:\n    ...',
+            codeExample: 'markah = 75\n\nif markah >= 90:\n    print("A")\nelif markah >= 80:\n    print("B")\nelif markah >= 70:\n    print("C")\nelse:\n    print("Perlu cuba lagi")',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u2l2e1',
@@ -513,6 +647,31 @@ const List<Unit> allUnits = [
         descEN: 'Learn how to compare values using comparison operators.',
         emoji: '⚖️',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '⚖️',
+            titleBM: 'Operator Perbandingan',
+            titleEN: 'Comparison Operators',
+            bodyBM: 'Operator perbandingan digunakan untuk MEMBANDINGKAN dua nilai. Hasilnya sentiasa True atau False.\n\n== sama dengan\n!= tidak sama\n> lebih besar\n< lebih kecil\n>= lebih besar atau sama\n<= lebih kecil atau sama',
+            bodyEN: 'Comparison operators are used to COMPARE two values. The result is always True or False.\n\n== equals\n!= not equal\n> greater than\n< less than\n>= greater than or equal\n<= less than or equal',
+          ),
+          LearnSlide(
+            emoji: '⚠️',
+            titleBM: '= vs == (Jangan Keliru!)',
+            titleEN: '= vs == (Don\'t Confuse!)',
+            bodyBM: 'Ini kesilapan paling biasa untuk pemula!\n\n• = (satu tanda sama) = SIMPAN nilai\n• == (dua tanda sama) = BANDINGKAN nilai\n\nContoh: x = 5 bermakna simpan 5 dalam x\nx == 5 bermakna "adakah x sama dengan 5?"',
+            bodyEN: 'This is the most common mistake for beginners!\n\n• = (one equals sign) = ASSIGN value\n• == (two equals signs) = COMPARE values\n\nExample: x = 5 means store 5 in x\nx == 5 means "is x equal to 5?"',
+            codeExample: 'x = 10        # simpan 10 dalam x\nprint(x == 10) # True\nprint(x == 5)  # False\nprint(x > 7)   # True\nprint(x != 10) # False',
+          ),
+          LearnSlide(
+            emoji: '🧪',
+            titleBM: 'Guna Dalam If/Else',
+            titleEN: 'Use in If/Else',
+            bodyBM: 'Operator perbandingan paling berguna apabila diguna bersama if/else untuk membuat keputusan dalam program.',
+            bodyEN: 'Comparison operators are most useful when used with if/else to make decisions in a program.',
+            codeExample: 'suhu = 35\n\nif suhu > 30:\n    print("Panas! Minum air banyak.")\nelif suhu > 20:\n    print("Cuaca selesa.")\nelse:\n    print("Sejuk! Pakai baju tebal.")',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u2l3e1',
@@ -593,6 +752,15 @@ const List<Unit> allUnits = [
         descEN: 'Test your understanding of logic and conditions!',
         emoji: '🏆',
         xpReward: 30,
+        slides: [
+          LearnSlide(
+            emoji: '🏆',
+            titleBM: 'Cabaran Unit 2!',
+            titleEN: 'Unit 2 Challenge!',
+            bodyBM: 'Hebat! Kamu dah habiskan Unit 2!\n\nMasa untuk uji semua yang dah dipelajari:\n✅ Boolean (True/False)\n✅ If/Else\n✅ Operator perbandingan\n\nSiap? Jom tunjukkan kehebatan kamu!',
+            bodyEN: 'Great! You\'ve completed Unit 2!\n\nTime to test everything you\'ve learned:\n✅ Boolean (True/False)\n✅ If/Else\n✅ Comparison operators\n\nReady? Let\'s show your skills!',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u2l4e1',
@@ -684,6 +852,30 @@ const List<Unit> allUnits = [
         descEN: 'Understand why loops are important in programming.',
         emoji: '🔁',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '🔁',
+            titleBM: 'Kenapa Perlu Pengulangan?',
+            titleEN: 'Why Do We Need Repetition?',
+            bodyBM: 'Bayangkan kamu perlu cetak "Helo" sebanyak 100 kali. Adakah kamu nak tulis print("Helo") 100 kali?\n\nTentu tidak! Gelung (loop) membolehkan kita mengulangi arahan secara automatik tanpa menulis kod yang sama berulang kali.',
+            bodyEN: 'Imagine you need to print "Hello" 100 times. Would you write print("Hello") 100 times?\n\nOf course not! Loops let us repeat instructions automatically without writing the same code over and over.',
+            codeExample: '# Tanpa gelung — membosankan!\nprint("Helo")\nprint("Helo")\nprint("Helo")  # ... 97 kali lagi\n\n# Dengan gelung — mudah!\nfor i in range(100):\n    print("Helo")',
+          ),
+          LearnSlide(
+            emoji: '🌍',
+            titleBM: 'Gelung dalam Kehidupan',
+            titleEN: 'Loops in Real Life',
+            bodyBM: 'Gelung digunakan di mana-mana dalam apps yang kita guna setiap hari:\n\n📱 Instagram — scroll tak habis-habis = gelung\n🎵 Spotify — ulang lagu = gelung\n🎮 Games — pergerakan watak = gelung\n📧 Email — semak mesej baru = gelung',
+            bodyEN: 'Loops are used everywhere in apps we use every day:\n\n📱 Instagram — endless scroll = loop\n🎵 Spotify — repeat song = loop\n🎮 Games — character movement = loop\n📧 Email — check new messages = loop',
+          ),
+          LearnSlide(
+            emoji: '📚',
+            titleBM: 'Dua Jenis Gelung',
+            titleEN: 'Two Types of Loops',
+            bodyBM: 'Dalam Python, ada dua gelung utama:\n\n🔄 While Loop\n• Ulang SELAGI syarat masih True\n• Guna apabila tidak tahu berapa kali nak ulang\n\n🔢 For Loop\n• Ulang untuk SETIAP item dalam senarai\n• Guna apabila tahu bilangan ulangan',
+            bodyEN: 'In Python, there are two main loops:\n\n🔄 While Loop\n• Repeat WHILE condition is True\n• Use when you don\'t know how many times to repeat\n\n🔢 For Loop\n• Repeat for EACH item in a list\n• Use when you know the number of repetitions',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u3l1e1',
@@ -773,6 +965,31 @@ const List<Unit> allUnits = [
         descEN: 'Learn how to use the while loop.',
         emoji: '⏳',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '⏳',
+            titleBM: 'While Loop — Gelung Bersyarat',
+            titleEN: 'While Loop — Conditional Loop',
+            bodyBM: 'While loop akan terus berulang SELAGI syarat yang diberikan masih True.\n\nBayangkan: "Selagi ada nasi, terus makan."\n\nApabila nasi habis (syarat jadi False), gelung berhenti.',
+            bodyEN: 'A while loop keeps repeating AS LONG AS the given condition is True.\n\nThink of it as: "While there is rice, keep eating."\n\nWhen the rice runs out (condition becomes False), the loop stops.',
+          ),
+          LearnSlide(
+            emoji: '📝',
+            titleBM: 'Cara Tulis While Loop',
+            titleEN: 'How to Write a While Loop',
+            bodyBM: 'Format while loop:\n\nwhile syarat:\n    lakukan sesuatu\n    kemas kini pemboleh ubah\n\nPERHATIAN: Pastikan syarat akhirnya jadi False, atau gelung akan berterusan selamanya!',
+            bodyEN: 'While loop format:\n\nwhile condition:\n    do something\n    update variable\n\nWARNING: Make sure the condition eventually becomes False, or the loop will run forever!',
+            codeExample: 'kiraan = 1\n\nwhile kiraan <= 5:\n    print(kiraan)\n    kiraan = kiraan + 1\n\n# Output: 1, 2, 3, 4, 5',
+          ),
+          LearnSlide(
+            emoji: '⚠️',
+            titleBM: 'Elak Gelung Tak Terhenti',
+            titleEN: 'Avoid Infinite Loops',
+            bodyBM: 'Gelung tak terhenti berlaku apabila syarat TIDAK PERNAH jadi False.\n\nIni menyebabkan program "hang" — tidak boleh berhenti!\n\nSentiasa pastikan ada sesuatu dalam gelung yang akan mengubah syarat kepada False.',
+            bodyEN: 'An infinite loop happens when the condition NEVER becomes False.\n\nThis causes the program to "hang" — it cannot stop!\n\nAlways make sure there\'s something inside the loop that will change the condition to False.',
+            codeExample: '# ⚠️ JANGAN buat ini!\nkiraan = 1\nwhile kiraan > 0:  # Sentiasa True!\n    print("Tak habis-habis...")\n    # kiraan tidak berubah!\n\n# ✅ Cara betul:\nwhile kiraan <= 5:\n    kiraan += 1  # Tambah setiap kali',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u3l2e1',
@@ -861,6 +1078,31 @@ const List<Unit> allUnits = [
         descEN: 'Learn how to use the for loop.',
         emoji: '🔢',
         xpReward: 20,
+        slides: [
+          LearnSlide(
+            emoji: '🔢',
+            titleBM: 'For Loop — Gelung Berkira',
+            titleEN: 'For Loop — Counted Loop',
+            bodyBM: 'For loop digunakan apabila kita TAHU berapa kali nak ulang.\n\nContoh: "Ulang 10 kali" atau "Untuk setiap pelajar dalam kelas, cetak nama mereka".\n\nIn Python, kita sering guna range() bersama for loop.',
+            bodyEN: 'For loop is used when we KNOW how many times to repeat.\n\nExample: "Repeat 10 times" or "For each student in class, print their name".\n\nIn Python, we often use range() with for loops.',
+            codeExample: '# Cetak 1 hingga 5\nfor i in range(1, 6):\n    print(i)\n\n# Output:\n# 1\n# 2\n# 3\n# 4\n# 5',
+          ),
+          LearnSlide(
+            emoji: '📋',
+            titleBM: 'Gelung Melalui Senarai',
+            titleEN: 'Loop Through a List',
+            bodyBM: 'For loop sangat berguna untuk melalui setiap item dalam senarai (list).\n\nCara bacanya: "Untuk setiap buah dalam senarai buah-buahan, cetak nama buah tersebut."',
+            bodyEN: 'For loops are great for going through each item in a list.\n\nRead it as: "For each fruit in the fruit list, print the fruit\'s name."',
+            codeExample: 'buahan = ["Epal", "Mangga", "Durian"]\n\nfor buah in buahan:\n    print(buah)\n\n# Output:\n# Epal\n# Mangga\n# Durian',
+          ),
+          LearnSlide(
+            emoji: '⚡',
+            titleBM: 'While vs For Loop',
+            titleEN: 'While vs For Loop',
+            bodyBM: 'Bila nak guna yang mana?\n\n🔄 While Loop:\n• Tidak tahu berapa kali nak ulang\n• Ulang sehingga sesuatu berlaku\n• Contoh: tunggu sehingga pengguna masukkan nombor betul\n\n🔢 For Loop:\n• Tahu berapa kali nak ulang\n• Melalui setiap item dalam senarai\n• Contoh: proses 10 nama pelajar',
+            bodyEN: 'When to use which?\n\n🔄 While Loop:\n• Don\'t know how many times to repeat\n• Repeat until something happens\n• Example: wait until user enters correct number\n\n🔢 For Loop:\n• Know how many times to repeat\n• Go through each item in a list\n• Example: process 10 student names',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u3l3e1',
@@ -948,6 +1190,15 @@ const List<Unit> allUnits = [
         descEN: 'Test your understanding of loops!',
         emoji: '🏆',
         xpReward: 30,
+        slides: [
+          LearnSlide(
+            emoji: '🏆',
+            titleBM: 'Cabaran Akhir!',
+            titleEN: 'Final Challenge!',
+            bodyBM: 'Luar biasa! Kamu hampir habiskan semua unit!\n\nMasa untuk buktikan kamu dah kuasai:\n✅ Gelung (Loops)\n✅ While Loop\n✅ For Loop\n\nIni adalah cabaran terakhir. Bagi yang terbaik! 💪',
+            bodyEN: 'Amazing! You\'re almost done with all units!\n\nTime to prove you\'ve mastered:\n✅ Loops\n✅ While Loop\n✅ For Loop\n\nThis is the final challenge. Give it your best! 💪',
+          ),
+        ],
         exercises: [
           Exercise(
             id: 'u3l4e1',

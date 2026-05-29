@@ -1,3 +1,21 @@
+class LearnSlide {
+  final String titleBM;
+  final String titleEN;
+  final String bodyBM;
+  final String bodyEN;
+  final String emoji;
+  final String? codeExample; // optional code block
+
+  const LearnSlide({
+    required this.titleBM,
+    required this.titleEN,
+    required this.bodyBM,
+    required this.bodyEN,
+    required this.emoji,
+    this.codeExample,
+  });
+}
+
 class Exercise {
   final String id;
   final String type; // 'mcq', 'fillblank', 'truefalse', 'arrange'
@@ -30,6 +48,7 @@ class Lesson {
   final String descBM;
   final String descEN;
   final String emoji;
+  final List<LearnSlide> slides;
   final List<Exercise> exercises;
   final int xpReward;
 
@@ -41,6 +60,7 @@ class Lesson {
     required this.descBM,
     required this.descEN,
     required this.emoji,
+    this.slides = const [],
     required this.exercises,
     this.xpReward = 20,
   });

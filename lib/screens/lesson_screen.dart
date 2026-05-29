@@ -5,6 +5,7 @@ import '../providers/course_provider.dart';
 import '../models/lesson_model.dart';
 import '../widgets/hearts_widget.dart';
 import '../widgets/exercise_widget.dart';
+import '../widgets/learn_slides_widget.dart';
 
 class LessonScreen extends StatefulWidget {
   final String lessonId;
@@ -16,6 +17,7 @@ class LessonScreen extends StatefulWidget {
 }
 
 class _LessonScreenState extends State<LessonScreen> {
+  bool _showingSlides = true;
   int _currentExerciseIndex = 0;
   int _correctCount = 0;
   bool _showingFeedback = false;
@@ -31,8 +33,13 @@ class _LessonScreenState extends State<LessonScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final courseProvider = context.read<CourseProvider>();
+      final lesson = courseProvider.getLessonById(widget.lessonId);
       setState(() {
-        _lesson = courseProvider.getLessonById(widget.lessonId);
+        _lesson = lesson;
+        // Skip slides phase if no slides defined
+        if (lesson != null && lesson.slides.isEmpty) {
+          _showingSlides = false;
+        }
       });
     });
   }
@@ -122,6 +129,29 @@ class _LessonScreenState extends State<LessonScreen> {
     final lesson = _lesson!;
     final progress = (_currentExerciseIndex + (_showingFeedback ? 1 : 0)) /
         lesson.exercises.length;
+
+    // Show learning slides first
+    if (_showingSlides && lesson.slides.isNotEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => _showQuitDialog(context, isBM),
+          ),
+          title: Text(
+            isBM ? lesson.titleBM : lesson.titleEN,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        body: LearnSlidesWidget(
+          slides: lesson.slides,
+          isBM: isBM,
+          onComplete: () => setState(() => _showingSlides = false),
+        ),
+      );
+    }
 
     if (_lessonComplete) {
       return _CompletionScreen(
