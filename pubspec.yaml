@@ -1,5 +1,5 @@
 name: reset30_app
-description: A 30-day habit tracking app based on Atomic Habits
+description: CODE30 - A Duolingo-style coding learning app for beginners
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   fl_chart: ^0.66.2
   shared_preferences: ^2.2.3
+  provider: ^6.1.2
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
