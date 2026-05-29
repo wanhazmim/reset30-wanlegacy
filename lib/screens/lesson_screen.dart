@@ -9,8 +9,9 @@ import '../widgets/learn_slides_widget.dart';
 
 class LessonScreen extends StatefulWidget {
   final String lessonId;
+  final bool startExercises;
 
-  const LessonScreen({super.key, required this.lessonId});
+  const LessonScreen({super.key, required this.lessonId, this.startExercises = false});
 
   @override
   State<LessonScreen> createState() => _LessonScreenState();
@@ -36,9 +37,14 @@ class _LessonScreenState extends State<LessonScreen> {
       final lesson = courseProvider.getLessonById(widget.lessonId);
       setState(() {
         _lesson = lesson;
-        // Skip slides phase if no slides defined
-        if (lesson != null && lesson.slides.isEmpty) {
+        // If caller requested to start at exercises (quiz mode), skip slides
+        if (widget.startExercises) {
           _showingSlides = false;
+        } else {
+          // Skip slides phase if no slides defined
+          if (lesson != null && lesson.slides.isEmpty) {
+            _showingSlides = false;
+          }
         }
       });
     });
@@ -58,6 +64,11 @@ class _LessonScreenState extends State<LessonScreen> {
         setState(() => _noHearts = true);
         return;
       }
+    }
+    // Award small XP for each correct answer and mark user active
+    if (correct) {
+      await userProvider.addXP(5);
+      await userProvider.markActiveNow();
     }
   }
 

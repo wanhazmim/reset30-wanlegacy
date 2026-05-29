@@ -241,6 +241,43 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
+                // Overall course progress
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isBM ? 'Kemajuan Kursus' : 'Course Progress',
+                          style: theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: LinearProgressIndicator(
+                            value: courseProvider.totalLessons() == 0
+                                ? 0
+                                : user.completedLessons.length / courseProvider.totalLessons(),
+                            minHeight: 12,
+                            backgroundColor: theme.colorScheme.surfaceVariant,
+                            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${user.completedLessons.length}/${courseProvider.totalLessons()} ${isBM ? 'pelajaran selesai' : 'lessons done'}',
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 // Continue button
                 if (nextLesson != null) ...[
                   Material(

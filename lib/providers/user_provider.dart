@@ -168,6 +168,12 @@ class UserProvider extends ChangeNotifier {
     await _save();
   }
 
+  /// Public helper to mark the user active today (updates streak and lastActiveDate)
+  Future<void> markActiveNow() async {
+    await _markActiveToday();
+    notifyListeners();
+  }
+
   // ─── Lessons ──────────────────────────────────────────────────
   Future<List<String>> completeLesson(String lessonId) async {
     if (_user.completedLessons.contains(lessonId)) return [];
