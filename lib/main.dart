@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/user_provider.dart';
 import 'providers/course_provider.dart';
-import 'screens/splash_screen.dart';
+import 'screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +44,7 @@ class Code30App extends StatelessWidget {
               useMaterial3: true,
             ),
             themeMode: userProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            home: const SplashScreen(),
+            home: const MainScreen(),
           );
         },
       ),
