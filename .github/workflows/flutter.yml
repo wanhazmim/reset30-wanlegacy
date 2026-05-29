@@ -4,23 +4,38 @@ on:
   push:
     branches:
       - main
+      - 'claude/**'
 
 jobs:
   build:
-    name: Build on Android
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: '3.22.3'
+          channel: 'stable'
+          cache: true
 
-      - run: flutter pub get
-      - run: flutter build apk --release
+      - name: Generate Android project files
+        run: |
+          flutter create --platforms android --org com.wanlegacy --project-name reset30 /tmp/scaffold
+          rm -rf android
+          cp -r /tmp/scaffold/android .
+          chmod +x android/gradlew
 
-      - uses: actions/upload-artifact@v3
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: release-apk
+          name: reset30-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
