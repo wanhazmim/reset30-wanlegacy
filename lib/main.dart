@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/dashboard_screen.dart';
 
-void main() {
-  runApp(const Reset30App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  runApp(Reset30App(prefs: prefs));
 }
 
 class Reset30App extends StatelessWidget {
-  const Reset30App({super.key});
+  final SharedPreferences prefs;
+  const Reset30App({super.key, required this.prefs});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ class Reset30App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const DashboardScreen(),
+      home: DashboardScreen(prefs: prefs),
       debugShowCheckedModeBanner: false,
     );
   }
