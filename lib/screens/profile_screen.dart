@@ -43,6 +43,19 @@ class ProfileScreen extends StatelessWidget {
               isBM ? 'Profil' : 'Profile',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  final result = await showDialog<bool>(
+                      context: context,
+                      builder: (_) => _EditProfileDialog(userProvider: userProvider));
+                  if (result == true) {
+                    // saved — refresh handled by provider
+                  }
+                },
+              )
+            ],
           ),
           body: ListView(
             padding: const EdgeInsets.all(16),
@@ -290,6 +303,79 @@ class ProfileScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _EditProfileDialog extends StatefulWidget {
+  final UserProvider userProvider;
+  const _EditProfileDialog({required this.userProvider});
+
+  @override
+  State<_EditProfileDialog> createState() => _EditProfileDialogState();
+}
+
+class _EditProfileDialogState extends State<_EditProfileDialog> {
+  late TextEditingController _nameController;
+  late String _language;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.userProvider.name);
+    _language = widget.userProvider.language;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isBM = widget.userProvider.language == 'bm';
+    return AlertDialog(
+      title: Text(isBM ? 'Edit Profil' : 'Edit Profile'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: isBM ? 'Nama' : 'Name'),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            value: _language,
+            items: const [
+              DropdownMenuItem(value: 'bm', child: Text('Bahasa Melayu')),
+              DropdownMenuItem(value: 'en', child: Text('English')),
+            ],
+            onChanged: (v) => setState(() => _language = v ?? 'bm'),
+            decoration: InputDecoration(labelText: isBM ? 'Bahasa' : 'Language'),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: () async {
+              await widget.userProvider.resetProgress();
+              if (mounted) Navigator.of(context).pop(true);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text(isBM ? 'Tetapkan Semula Kemajuan' : 'Reset Progress'),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(isBM ? 'Batal' : 'Cancel')),
+        ElevatedButton(
+          onPressed: () async {
+            await widget.userProvider.setName(_nameController.text);
+            await widget.userProvider.setLanguage(_language);
+            if (mounted) Navigator.of(context).pop(true);
+          },
+          child: Text(isBM ? 'Simpan' : 'Save'),
+        ),
+      ],
     );
   }
 }
