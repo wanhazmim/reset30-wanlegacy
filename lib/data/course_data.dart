@@ -412,6 +412,114 @@ const List<Unit> allUnits = [
       ),
     ],
   ),
+  // ─────────────────────────── UNIT 4 (Web Asas) ───────────────────────────
+  Unit(
+    id: 'u4',
+    titleBM: 'Web Asas (HTML/CSS/JS)',
+    titleEN: 'Web Basics (HTML/CSS/JS)',
+    emoji: '🌐',
+    color: '#9C27B0',
+    lessons: [
+      Lesson(
+        id: 'u4l1',
+        unitId: 'u4',
+        titleBM: 'Pengenalan HTML',
+        titleEN: 'Intro to HTML',
+        descBM: 'Belajar struktur asas halaman web dengan HTML.',
+        descEN: 'Learn basic web page structure with HTML.',
+        emoji: '🔤',
+        xpReward: 25,
+        slides: [
+          LearnSlide(
+            emoji: '📄',
+            titleBM: 'Apa itu HTML?',
+            titleEN: 'What is HTML?',
+            bodyBM: 'HTML adalah bahasa untuk struktur halaman web. Ia menggunakan "tag" untuk memberitahu pelayar apa yang harus dipaparkan seperti tajuk, perenggan, dan pautan.',
+            bodyEN: 'HTML is the language for web page structure. It uses "tags" to tell the browser what to display like headings, paragraphs, and links.',
+            codeExample: '<!DOCTYPE html>\n<html>\n  <head><title>Halaman Saya</title></head>\n  <body>\n    <h1>Helo Dunia</h1>\n    <p>Ini adalah paragraf.</p>\n  </body>\n</html>',
+          ),
+        ],
+        exercises: [
+          Exercise(
+            id: 'u4l1e1',
+            type: 'mcq',
+            questionBM: 'Tag HTML manakah digunakan untuk tajuk utama?',
+            questionEN: 'Which HTML tag is used for the main heading?',
+            options: ['<p>', '<h1>', '<div>', '<a>'],
+            correctAnswer: '1',
+            explanationBM: '<h1> digunakan untuk tajuk utama halaman.',
+            explanationEN: '<h1> is used for the main heading of a page.',
+          ),
+        ],
+      ),
+
+      Lesson(
+        id: 'u4l2',
+        unitId: 'u4',
+        titleBM: 'Gaya Dengan CSS',
+        titleEN: 'Styling with CSS',
+        descBM: 'Tambah gaya dan warna ke halaman web menggunakan CSS.',
+        descEN: 'Add style and color to web pages using CSS.',
+        emoji: '🎨',
+        xpReward: 25,
+        slides: [
+          LearnSlide(
+            emoji: '🎨',
+            titleBM: 'Apa itu CSS?',
+            titleEN: 'What is CSS?',
+            bodyBM: 'CSS (Cascading Style Sheets) mengawal rupa halaman — warna, fon, jarak, dan susun atur. HTML adalah struktur; CSS adalah gaya.',
+            bodyEN: 'CSS controls how the page looks — colors, fonts, spacing, and layout. HTML is structure; CSS is style.',
+            codeExample: 'h1 {\n  color: #4CAF50;\n  font-size: 28px;\n}',
+          ),
+        ],
+        exercises: [
+          Exercise(
+            id: 'u4l2e1',
+            type: 'mcq',
+            questionBM: 'CSS digunakan untuk?',
+            questionEN: 'CSS is used for?',
+            options: ['Struktur halaman', 'Gaya dan susun atur', 'Menjalankan kod di pelayan', 'Menyimpan data'],
+            correctAnswer: '1',
+            explanationBM: 'CSS digunakan untuk memberi gaya kepada elemen HTML.',
+            explanationEN: 'CSS is used to style HTML elements.',
+          ),
+        ],
+      ),
+
+      Lesson(
+        id: 'u4l3',
+        unitId: 'u4',
+        titleBM: 'Interaktif Dengan JavaScript',
+        titleEN: 'Interactivity with JavaScript',
+        descBM: 'Tambah interaksi seperti klik butang menggunakan JavaScript.',
+        descEN: 'Add interactions like button clicks using JavaScript.',
+        emoji: '⚡',
+        xpReward: 30,
+        slides: [
+          LearnSlide(
+            emoji: '⚡',
+            titleBM: 'Apa itu JavaScript?',
+            titleEN: 'What is JavaScript?',
+            bodyBM: 'JavaScript adalah bahasa yang membuat halaman web menjadi interaktif — mengendalikan klik, menukar kandungan, dan banyak lagi.',
+            bodyEN: 'JavaScript is the language that makes web pages interactive — handling clicks, changing content, and more.',
+            codeExample: '<button onclick="alert(\'Helo\')">Klik Saya</button>',
+          ),
+        ],
+        exercises: [
+          Exercise(
+            id: 'u4l3e1',
+            type: 'mcq',
+            questionBM: 'JavaScript biasanya digunakan untuk?',
+            questionEN: 'JavaScript is typically used for?',
+            options: ['Menambah gaya', 'Membuat interaksi dinamik', 'Menyusun data di server', 'Menetapkan struktur dokumen'],
+            correctAnswer: '1',
+            explanationBM: 'JavaScript membuat halaman web menjadi interaktif dan dinamik.',
+            explanationEN: 'JavaScript makes web pages interactive and dynamic.',
+          ),
+        ],
+      ),
+    ],
+  ),
 
   // ─────────────────────────── UNIT 2 ───────────────────────────
   Unit(

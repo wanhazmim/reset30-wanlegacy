@@ -5,6 +5,7 @@ import 'home_screen.dart';
 import 'course_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';
+import 'leaderboard_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     CourseScreen(),
     ProfileScreen(),
+    LeaderboardScreen(),
     SettingsScreen(),
   ];
 
@@ -50,6 +52,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: const Icon(Icons.person_outline),
             selectedIcon: const Icon(Icons.person),
             label: isBM ? 'Profil' : 'Profile',
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.emoji_events_outlined),
+            selectedIcon: const Icon(Icons.emoji_events),
+            label: isBM ? 'Papan Kedudukan' : 'Leaderboard',
           ),
           NavigationDestination(
             icon: const Icon(Icons.settings_outlined),
