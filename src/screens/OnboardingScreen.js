@@ -37,7 +37,7 @@ export default function OnboardingScreen({ navigation }) {
       setPage(next);
       scrollRef.current?.scrollTo({ x: next * width, animated: true });
     } else {
-      navigation.navigate('NameInput');
+      setPage(PAGES.length);
     }
   };
 

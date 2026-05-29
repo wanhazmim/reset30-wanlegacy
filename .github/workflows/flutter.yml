@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -29,14 +28,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Expo CLI
-        run: npm install -g @expo/cli
-
-      - name: Generate Android project (prebuild)
-        run: npx expo prebuild --platform android --clean --non-interactive
+      - name: Generate Android project (Expo prebuild)
+        run: npx expo prebuild --platform android --clean
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
