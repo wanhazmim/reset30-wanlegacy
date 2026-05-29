@@ -59,6 +59,11 @@ class _LessonScreenState extends State<LessonScreen> {
         return;
       }
     }
+    // Award small XP for each correct answer and mark user active
+    if (correct) {
+      await userProvider.addXP(5);
+      await userProvider.markActiveNow();
+    }
   }
 
   void _next() {
