@@ -1,13 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { UNITS } from '../data/courses';
 import { C, R, S } from '../theme';
-
-const { width } = Dimensions.get('window');
 
 const QUOTES = [
   { text: 'Perjalanan seribu batu bermula dengan satu langkah.', author: 'Lao Tzu' },

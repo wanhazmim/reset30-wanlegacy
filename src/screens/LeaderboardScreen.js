@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import {
   View, Text, StyleSheet, ScrollView,
-  Animated, TouchableOpacity,
+  Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,33 +14,19 @@ const MEDAL_ICONS = ['trophy', 'medal', 'ribbon'];
 const MEDAL_COLORS = ['#F59E0B', '#94A3B8', '#CD7C3B'];
 const PODIUM_HEIGHTS = [100, 130, 76];
 
-function Avatar({ letter, size = 44, bg = C.primaryLight, color = C.primary, isMe, borderColor }) {
-  return (
-    <View style={[
-      {
-        width: size, height: size, borderRadius: size / 2,
-        backgroundColor: bg, alignItems: 'center', justifyContent: 'center',
-        borderWidth: isMe ? 2.5 : 0,
-        borderColor: borderColor || C.gold,
-      },
-    ]}>
-      <Text style={{ fontSize: size * 0.42, fontWeight: '800', color }}>{letter}</Text>
-    </View>
-  );
-}
-
 function PodiumItem({ item, heightIndex }) {
   const scaleAnim = useRef(new Animated.Value(0.6)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const delay = heightIndex === 1 ? 0 : heightIndex === 0 ? 120 : 240;
-    setTimeout(() => {
+    const t = setTimeout(() => {
       Animated.parallel([
         Animated.spring(scaleAnim, { toValue: 1, tension: 60, friction: 7, useNativeDriver: true }),
         Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
       ]).start();
     }, delay);
+    return () => clearTimeout(t);
   }, []);
 
   if (!item) return <View style={{ flex: 1 }} />;
@@ -76,12 +62,13 @@ function ListItem({ item, index }) {
 
   useEffect(() => {
     const delay = index * 40;
-    setTimeout(() => {
+    const t = setTimeout(() => {
       Animated.parallel([
         Animated.timing(slideAnim, { toValue: 0, duration: 280, useNativeDriver: true }),
         Animated.timing(opacityAnim, { toValue: 1, duration: 280, useNativeDriver: true }),
       ]).start();
     }, delay);
+    return () => clearTimeout(t);
   }, []);
 
   const rankColor = item.rank <= 3 ? MEDAL_COLORS[item.rank - 1] : C.textMuted;
