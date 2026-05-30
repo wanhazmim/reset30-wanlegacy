@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useApp } from '../context/AppContext';
 
 export default function SplashScreen({ navigation }) {
   const { isFirstTime, init } = useApp();
+  const [ready, setReady] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0.7)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const dotAnim1 = useRef(new Animated.Value(0.3)).current;
@@ -11,13 +12,11 @@ export default function SplashScreen({ navigation }) {
   const dotAnim3 = useRef(new Animated.Value(0.3)).current;
 
   useEffect(() => {
-    // Animate in
     Animated.parallel([
       Animated.spring(scaleAnim, { toValue: 1, tension: 50, friction: 7, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
     ]).start();
 
-    // Loading dots
     const dotLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(dotAnim1, { toValue: 1, duration: 300, useNativeDriver: true }),
@@ -36,18 +35,19 @@ export default function SplashScreen({ navigation }) {
     const timer = setTimeout(async () => {
       await init();
       dotLoop.stop();
-    }, 400);
+      setReady(true);
+    }, 600);
 
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (isFirstTime === true) return;
+    if (!ready) return;
     const t = setTimeout(() => {
       navigation.replace(isFirstTime ? 'Onboarding' : 'Main');
-    }, 2000);
+    }, 1400);
     return () => clearTimeout(t);
-  }, [isFirstTime]);
+  }, [ready]);
 
   return (
     <View style={styles.container}>
