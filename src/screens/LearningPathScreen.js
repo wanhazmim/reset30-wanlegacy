@@ -1,13 +1,81 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { UNITS } from '../data/courses';
+import { C, R, S, UNIT_COLORS } from '../theme';
+
+const UNIT_ICONS = { u1: 'globe-outline', u2: 'color-palette-outline', u3: 'flash-outline' };
+
+function LessonCard({ lesson, index, unit, status, onPress }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const onPressIn = () => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start();
+  const onPressOut = () => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start();
+
+  const uc = UNIT_COLORS[unit.id] || UNIT_COLORS.u1;
+  const isDone = status === 'done';
+  const isLocked = status === 'locked';
+
+  return (
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <TouchableOpacity
+        style={[styles.lessonCard, isDone && styles.lessonDone, isLocked && styles.lessonLocked]}
+        onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        disabled={isLocked}
+        activeOpacity={1}
+      >
+        {/* Number circle */}
+        <View style={[styles.lessonNum, {
+          backgroundColor: isDone ? C.success : isLocked ? C.border : uc.primary,
+        }]}>
+          {isDone
+            ? <Ionicons name="checkmark" size={16} color="#fff" />
+            : isLocked
+              ? <Ionicons name="lock-closed" size={14} color={C.textMuted} />
+              : <Text style={styles.lessonNumText}>{index + 1}</Text>
+          }
+        </View>
+
+        {/* Content */}
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.lessonTitle, isLocked && { color: C.textMuted }]} numberOfLines={1}>
+            {lesson.title}
+          </Text>
+          <Text style={styles.lessonDesc} numberOfLines={1}>{lesson.desc}</Text>
+          {!isLocked && (
+            <View style={styles.lessonMeta}>
+              <Ionicons name="time-outline" size={12} color={C.textMuted} />
+              <Text style={styles.lessonMetaText}>~5 min</Text>
+              <View style={styles.dot} />
+              <Text style={styles.lessonMetaText}>{lesson.slides?.length || 3} slaid</Text>
+            </View>
+          )}
+        </View>
+
+        {/* XP badge */}
+        <View style={[styles.xpBadge, {
+          backgroundColor: isDone ? C.successBg : isLocked ? C.bg : uc.bg,
+        }]}>
+          <Ionicons name="star" size={11} color={isDone ? C.success : isLocked ? C.textMuted : uc.primary} />
+          <Text style={[styles.xpBadgeText, { color: isDone ? C.success : isLocked ? C.textMuted : uc.primary }]}>
+            {lesson.xpReward}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+}
 
 export default function LearningPathScreen({ navigation }) {
   const { completedLessons } = useApp();
   const [activeIdx, setActiveIdx] = useState(0);
   const unit = UNITS[activeIdx];
+  const uc = UNIT_COLORS[unit?.id] || UNIT_COLORS.u1;
 
   const getLessonStatus = (lesson, index) => {
     if (completedLessons.includes(lesson.id)) return 'done';
@@ -15,101 +83,101 @@ export default function LearningPathScreen({ navigation }) {
     return (index === 0 || allPrevDone) ? 'open' : 'locked';
   };
 
-  const unitDone = unit.lessons.filter(l => completedLessons.includes(l.id)).length;
-  const unitPct = unit.lessons.length > 0 ? (unitDone / unit.lessons.length) * 100 : 0;
+  const doneLessons = unit.lessons.filter(l => completedLessons.includes(l.id)).length;
+  const pct = unit.lessons.length > 0 ? (doneLessons / unit.lessons.length) * 100 : 0;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={[styles.header, { backgroundColor: unit.color }]}>
-        <Text style={styles.headerTitle}>📚 Laluan Belajar</Text>
+      {/* Header */}
+      <LinearGradient colors={uc.gradient} style={styles.header}>
+        <Text style={styles.headerTitle}>Laluan Belajar</Text>
         <Text style={styles.headerSub}>Pilih topik dan mula belajar</Text>
-      </View>
 
-      <View style={[styles.tabsWrap, { backgroundColor: unit.color }]}>
+        {/* Tabs */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>
-          {UNITS.map((u, i) => (
-            <TouchableOpacity key={u.id} style={[styles.tab, activeIdx === i && styles.tabActive]} onPress={() => setActiveIdx(i)}>
-              <Text style={styles.tabEmoji}>{u.emoji}</Text>
-              <Text style={[styles.tabText, activeIdx === i && styles.tabTextActive]}>{u.title}</Text>
-            </TouchableOpacity>
-          ))}
+          {UNITS.map((u, i) => {
+            const active = activeIdx === i;
+            return (
+              <TouchableOpacity key={u.id} style={[styles.tab, active && styles.tabActive]} onPress={() => setActiveIdx(i)} activeOpacity={0.8}>
+                <Ionicons name={UNIT_ICONS[u.id] || 'book-outline'} size={15} color={active ? uc.primary : 'rgba(255,255,255,0.7)'} />
+                <Text style={[styles.tabText, active && { color: uc.primary }]}>{u.title}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
-      </View>
+      </LinearGradient>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={[styles.unitBanner, { backgroundColor: unit.lightColor || '#F0FDF4' }]}>
+        {/* Unit banner */}
+        <View style={[styles.unitBanner, { borderColor: uc.primary + '30' }]}>
+          <View style={[styles.unitIconBig, { backgroundColor: uc.bg }]}>
+            <Ionicons name={UNIT_ICONS[unit.id] || 'book'} size={30} color={uc.primary} />
+          </View>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.unitBannerTitle, { color: unit.color }]}>{unit.emoji} {unit.title}</Text>
+            <Text style={[styles.unitBannerTitle, { color: uc.primary }]}>{unit.title}</Text>
             <Text style={styles.unitBannerSub}>{unit.subtitle}</Text>
-            <View style={styles.unitBarWrap}>
-              <View style={styles.unitBarBg}>
-                <View style={[styles.unitBarFill, { width: `${unitPct}%`, backgroundColor: unit.color }]} />
+            <View style={styles.unitProgressRow}>
+              <View style={styles.unitProgressBg}>
+                <View style={[styles.unitProgressFill, { width: `${pct}%`, backgroundColor: uc.primary }]} />
               </View>
-              <Text style={[styles.unitBarPct, { color: unit.color }]}>{Math.round(unitPct)}%</Text>
+              <Text style={[styles.unitProgressPct, { color: uc.primary }]}>{Math.round(pct)}%</Text>
             </View>
           </View>
-          <Text style={{ fontSize: 50 }}>{unit.emoji}</Text>
         </View>
 
-        <Text style={styles.sectionLabel}>{unitDone}/{unit.lessons.length} Pelajaran Selesai</Text>
+        <View style={styles.completedRow}>
+          <Ionicons name="checkmark-circle" size={15} color={C.success} />
+          <Text style={styles.completedText}>{doneLessons} daripada {unit.lessons.length} pelajaran selesai</Text>
+        </View>
 
-        {unit.lessons.map((lesson, idx) => {
-          const status = getLessonStatus(lesson, idx);
-          return (
-            <TouchableOpacity
-              key={lesson.id}
-              style={[styles.lessonCard, status === 'done' && styles.lessonDone, status === 'locked' && styles.lessonLocked]}
-              onPress={() => status !== 'locked' && navigation.navigate('Lesson', { lessonId: lesson.id })}
-              disabled={status === 'locked'}
-              activeOpacity={0.75}
-            >
-              <View style={[styles.lessonBullet, { backgroundColor: status === 'done' ? '#059669' : status === 'locked' ? '#D1D5DB' : unit.color }]}>
-                <Text style={styles.lessonBulletText}>{status === 'done' ? '✓' : status === 'locked' ? '🔒' : String(idx + 1)}</Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.lessonTitle, status === 'locked' && { color: '#9CA3AF' }]}>{lesson.title}</Text>
-                <Text style={styles.lessonDesc}>{lesson.desc}</Text>
-              </View>
-              <View style={[styles.xpChip, { backgroundColor: status === 'done' ? '#ECFDF5' : '#F3F4F6' }]}>
-                <Text style={{ fontSize: 11, fontWeight: '700', color: status === 'done' ? '#059669' : '#9CA3AF' }}>
-                  {status === 'done' ? '✅ ' : ''}{lesson.xpReward} XP
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+        {unit.lessons.map((lesson, idx) => (
+          <LessonCard
+            key={lesson.id}
+            lesson={lesson}
+            index={idx}
+            unit={unit}
+            status={getLessonStatus(lesson, idx)}
+            onPress={() => navigation.navigate('Lesson', { lessonId: lesson.id })}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F9FAFB' },
-  header: { paddingTop: 12, paddingBottom: 12, paddingHorizontal: 20 },
-  headerTitle: { fontSize: 22, fontWeight: 'bold', color: '#fff' },
-  headerSub: { fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 2 },
-  tabsWrap: { paddingBottom: 12 },
-  tabs: { paddingHorizontal: 12, gap: 8 },
-  tab: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', gap: 6 },
+  safe: { flex: 1, backgroundColor: C.bg },
+  header: { paddingTop: 12, paddingBottom: 0, paddingHorizontal: 20 },
+  headerTitle: { fontSize: 22, fontWeight: '800', color: '#fff', marginBottom: 2 },
+  headerSub: { fontSize: 13, color: 'rgba(255,255,255,0.75)', marginBottom: 16 },
+  tabs: { flexDirection: 'row', gap: 8, paddingBottom: 16 },
+  tab: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingVertical: 8, borderRadius: R.full, backgroundColor: 'rgba(255,255,255,0.15)' },
   tabActive: { backgroundColor: '#fff' },
-  tabEmoji: { fontSize: 16 },
-  tabText: { fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.8)' },
-  tabTextActive: { color: '#0D9488' },
+  tabText: { fontSize: 13, fontWeight: '700', color: 'rgba(255,255,255,0.8)' },
+
   content: { padding: 16, paddingBottom: 40 },
-  unitBanner: { borderRadius: 18, padding: 18, flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  unitBannerTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 4 },
-  unitBannerSub: { fontSize: 13, color: '#6B7280', marginBottom: 10 },
-  unitBarWrap: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  unitBarBg: { flex: 1, height: 6, backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 3, overflow: 'hidden' },
-  unitBarFill: { height: '100%', borderRadius: 3 },
-  unitBarPct: { fontSize: 12, fontWeight: 'bold' },
-  sectionLabel: { fontSize: 13, fontWeight: '600', color: '#6B7280', marginBottom: 12 },
-  lessonCard: { backgroundColor: '#fff', borderRadius: 14, padding: 14, flexDirection: 'row', alignItems: 'center', marginBottom: 10, elevation: 2, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 5, shadowOffset: { width: 0, height: 2 } },
+  unitBanner: { backgroundColor: C.surface, borderRadius: R.lg, padding: 16, flexDirection: 'row', gap: 14, marginBottom: 12, borderWidth: 1, ...S.sm },
+  unitIconBig: { width: 60, height: 60, borderRadius: R.md, alignItems: 'center', justifyContent: 'center' },
+  unitBannerTitle: { fontSize: 16, fontWeight: '800', marginBottom: 3 },
+  unitBannerSub: { fontSize: 12, color: C.textSub, marginBottom: 10 },
+  unitProgressRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  unitProgressBg: { flex: 1, height: 6, backgroundColor: C.border, borderRadius: R.full, overflow: 'hidden' },
+  unitProgressFill: { height: '100%', borderRadius: R.full },
+  unitProgressPct: { fontSize: 12, fontWeight: '700' },
+
+  completedRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 },
+  completedText: { fontSize: 13, color: C.textSub, fontWeight: '600' },
+
+  lessonCard: { backgroundColor: C.surface, borderRadius: R.md, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10, ...S.sm },
   lessonDone: { backgroundColor: '#F0FDF4', borderWidth: 1, borderColor: '#BBF7D0' },
   lessonLocked: { opacity: 0.55 },
-  lessonBullet: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
-  lessonBulletText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
-  lessonTitle: { fontSize: 15, fontWeight: '700', color: '#111827', marginBottom: 2 },
-  lessonDesc: { fontSize: 12, color: '#6B7280' },
-  xpChip: { borderRadius: 8, paddingHorizontal: 8, paddingVertical: 5 },
+  lessonNum: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  lessonNumText: { color: '#fff', fontWeight: '800', fontSize: 14 },
+  lessonTitle: { fontSize: 14, fontWeight: '700', color: C.text, marginBottom: 2 },
+  lessonDesc: { fontSize: 12, color: C.textSub, marginBottom: 4 },
+  lessonMeta: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  lessonMetaText: { fontSize: 11, color: C.textMuted, fontWeight: '500' },
+  dot: { width: 3, height: 3, borderRadius: 2, backgroundColor: C.textMuted },
+  xpBadge: { flexDirection: 'row', alignItems: 'center', gap: 3, borderRadius: R.sm, paddingHorizontal: 8, paddingVertical: 5, flexShrink: 0 },
+  xpBadgeText: { fontSize: 12, fontWeight: '700' },
 });

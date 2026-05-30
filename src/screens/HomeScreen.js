@@ -1,18 +1,48 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 import { UNITS } from '../data/courses';
+import { C, R, S } from '../theme';
 
 const QUOTES = [
   { text: 'Perjalanan seribu batu bermula dengan satu langkah.', author: 'Lao Tzu' },
   { text: 'Setiap pakar pernah jadi pemula.', author: 'Helen Hayes' },
   { text: 'Kod hari ini, kejayaan esok hari.', author: 'CODE30' },
-  { text: 'Jangan tunggu masa yang sesuai. Mulakan sekarang.', author: 'Napoleon Hill' },
   { text: 'Disiplin adalah jambatan antara matlamat dan pencapaian.', author: 'Jim Rohn' },
   { text: 'Terus cuba, terus belajar. Kegagalan adalah guru terbaik.', author: 'CODE30' },
-  { text: 'Satu pelajaran sehari jauh lebih baik dari satu minggu berturut-turut.', author: 'CODE30' },
+  { text: 'Satu pelajaran sehari lebih baik dari seminggu berturut-turut.', author: 'CODE30' },
+  { text: 'Jangan tunggu masa yang sesuai. Mulakan sekarang.', author: 'Napoleon Hill' },
 ];
+
+function StatCard({ icon, value, label, color, bg }) {
+  return (
+    <View style={[styles.statCard, { backgroundColor: bg }]}>
+      <View style={[styles.statIconWrap, { backgroundColor: color + '20' }]}>
+        <Ionicons name={icon} size={18} color={color} />
+      </View>
+      <Text style={[styles.statValue, { color }]}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function ProgressBar({ progress, color = C.primary, height = 10, style }) {
+  const anim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(anim, { toValue: progress, duration: 800, useNativeDriver: false }).start();
+  }, [progress]);
+  return (
+    <View style={[styles.progressBg, { height }, style]}>
+      <Animated.View style={[styles.progressFill, {
+        width: anim.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }),
+        backgroundColor: color, height,
+      }]} />
+    </View>
+  );
+}
 
 export default function HomeScreen({ navigation }) {
   const { userName, xp, level, hearts, streak, completedLessons, checkNewDay } = useApp();
@@ -20,148 +50,185 @@ export default function HomeScreen({ navigation }) {
 
   const totalLessons = UNITS.reduce((s, u) => s + u.lessons.length, 0);
   const doneCount = completedLessons.length;
-  const overallPct = totalLessons > 0 ? Math.round((doneCount / totalLessons) * 100) : 0;
   const xpInLevel = xp % 200;
+  const xpPct = xpInLevel / 200;
   const quote = QUOTES[new Date().getDay() % QUOTES.length];
+  const greeting = new Date().getHours() < 12 ? 'Selamat Pagi' : new Date().getHours() < 18 ? 'Selamat Petang' : 'Selamat Malam';
+
   const nextLesson = (() => {
-    for (const unit of UNITS) for (const lesson of unit.lessons)
-      if (!completedLessons.includes(lesson.id)) return { lesson, unit };
+    for (const unit of UNITS)
+      for (const lesson of unit.lessons)
+        if (!completedLessons.includes(lesson.id)) return { lesson, unit };
     return null;
   })();
-  const greeting = new Date().getHours() < 12 ? 'Selamat Pagi' : new Date().getHours() < 18 ? 'Selamat Petang' : 'Selamat Malam';
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.headerRow}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.greeting}>{greeting}, {userName || 'Pelajar'} 👋</Text>
-            <Text style={styles.greetingSub}>Jom teruskan pembelajaran hari ini!</Text>
-          </View>
-          <View style={styles.heartsRow}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Text key={i} style={{ fontSize: 16, opacity: i < hearts ? 1 : 0.2 }}>❤️</Text>
-            ))}
-          </View>
-        </View>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
-          {[
-            { emoji: '🔥', value: String(streak), label: 'Hari Streak', bg: '#FFF7ED', color: '#F59E0B' },
-            { emoji: '⭐', value: String(xp), label: 'XP Terkumpul', bg: '#ECFDF5', color: '#059669' },
-            { emoji: '🎖️', value: `Lvl ${level}`, label: 'Level', bg: '#EEF2FF', color: '#6366F1' },
-            { emoji: '📖', value: `${doneCount}/${totalLessons}`, label: 'Pelajaran', bg: '#FFF1F2', color: '#E11D48' },
-          ].map((s, i) => (
-            <View key={i} style={[styles.statPill, { backgroundColor: s.bg }]}>
-              <Text style={{ fontSize: 22, marginBottom: 4 }}>{s.emoji}</Text>
-              <Text style={[styles.statValue, { color: s.color }]}>{s.value}</Text>
-              <Text style={styles.statLabel}>{s.label}</Text>
+        {/* ── HERO GRADIENT HEADER ── */}
+        <LinearGradient colors={[C.primary, C.primaryDark]} style={styles.hero}>
+          <View style={styles.heroTop}>
+            <View>
+              <Text style={styles.heroGreeting}>{greeting} 👋</Text>
+              <Text style={styles.heroName}>{userName || 'Pelajar'}</Text>
             </View>
-          ))}
-        </ScrollView>
-
-        <View style={styles.card}>
-          <View style={styles.cardRow}>
-            <Text style={styles.cardTitle}>🚀 Level {level}</Text>
-            <Text style={styles.cardBadge}>{xpInLevel}/200 XP</Text>
+            <View style={styles.heartsWrap}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Ionicons key={i} name={i < hearts ? 'heart' : 'heart-outline'}
+                  size={20} color={i < hearts ? '#FF6B6B' : 'rgba(255,255,255,0.3)'} />
+              ))}
+            </View>
           </View>
-          <View style={styles.bar}><View style={[styles.barFill, { width: `${(xpInLevel / 200) * 100}%` }]} /></View>
-          <Text style={styles.barNote}>{200 - xpInLevel} XP lagi untuk Level {level + 1}</Text>
+
+          {/* XP Level Progress */}
+          <View style={styles.xpCard}>
+            <View style={styles.xpCardRow}>
+              <View style={styles.levelBadge}>
+                <Ionicons name="flash" size={13} color={C.gold} />
+                <Text style={styles.levelText}>Level {level}</Text>
+              </View>
+              <Text style={styles.xpLabel}>{xpInLevel} / 200 XP</Text>
+            </View>
+            <ProgressBar progress={xpPct} color={C.gold} height={8} style={{ borderRadius: R.full }} />
+            <Text style={styles.xpNext}>{200 - xpInLevel} XP lagi ke Level {level + 1}</Text>
+          </View>
+        </LinearGradient>
+
+        {/* ── STATS ROW ── */}
+        <View style={styles.statsRow}>
+          <StatCard icon="flame" value={streak} label="Hari Streak" color="#F97316" bg="#FFF7ED" />
+          <StatCard icon="star" value={xp} label="XP" color={C.gold} bg={C.goldLight} />
+          <StatCard icon="book" value={doneCount} label="Selesai" color={C.primary} bg={C.primaryBg} />
+          <StatCard icon="ribbon" value={`${Math.round((doneCount/Math.max(totalLessons,1))*100)}%`} label="Kemajuan" color={C.violet} bg={C.violetBg} />
         </View>
 
-        <View style={styles.card}>
-          <View style={styles.cardRow}>
-            <Text style={styles.cardTitle}>📊 Kemajuan Keseluruhan</Text>
-            <Text style={[styles.cardBadge, { color: '#059669', backgroundColor: '#ECFDF5' }]}>{overallPct}%</Text>
-          </View>
-          <View style={styles.bar}><View style={[styles.barFill, { width: `${overallPct}%`, backgroundColor: '#059669' }]} /></View>
-          <View style={{ gap: 6, marginTop: 8 }}>
-            {UNITS.map(unit => {
-              const d = unit.lessons.filter(l => completedLessons.includes(l.id)).length;
-              const p = unit.lessons.length > 0 ? (d / unit.lessons.length) * 100 : 0;
-              return (
-                <View key={unit.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                  <Text style={{ fontSize: 16, width: 22 }}>{unit.emoji}</Text>
-                  <View style={{ flex: 1, height: 5, backgroundColor: '#F3F4F6', borderRadius: 3, overflow: 'hidden' }}>
-                    <View style={{ height: '100%', width: `${p}%`, backgroundColor: unit.color, borderRadius: 3 }} />
-                  </View>
-                  <Text style={{ fontSize: 11, fontWeight: '600', color: '#6B7280', width: 32, textAlign: 'right' }}>{Math.round(p)}%</Text>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
+        {/* ── CONTINUE LEARNING ── */}
         {nextLesson ? (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>▶️ Teruskan Belajar</Text>
-            <TouchableOpacity
-              style={[styles.continueCard, { borderLeftColor: nextLesson.unit.color }]}
-              onPress={() => navigation.navigate('Lesson', { lessonId: nextLesson.lesson.id })}
-              activeOpacity={0.8}
-            >
-              <Text style={{ fontSize: 30, marginRight: 12 }}>{nextLesson.lesson.emoji}</Text>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 15, fontWeight: '700', color: '#111827' }}>{nextLesson.lesson.title}</Text>
-                <Text style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{nextLesson.unit.title}</Text>
+          <TouchableOpacity
+            style={styles.continueWrap}
+            onPress={() => navigation.navigate('Lesson', { lessonId: nextLesson.lesson.id })}
+            activeOpacity={0.85}
+          >
+            <LinearGradient colors={[nextLesson.unit.color || C.primary, (nextLesson.unit.color || C.primary) + 'CC']}
+              start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.continueCard}>
+              <View style={styles.continueBadge}>
+                <Ionicons name="play-circle" size={14} color="#fff" />
+                <Text style={styles.continueBadgeText}>TERUSKAN</Text>
               </View>
-              <View style={[styles.xpPill, { backgroundColor: nextLesson.unit.color }]}>
-                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12 }}>+{nextLesson.lesson.xpReward} XP</Text>
+              <Text style={styles.continueTitle}>{nextLesson.lesson.title}</Text>
+              <Text style={styles.continueUnit}>{nextLesson.unit.title}</Text>
+              <View style={styles.continueFooter}>
+                <View style={styles.xpPill}>
+                  <Ionicons name="star" size={12} color={C.gold} />
+                  <Text style={styles.xpPillText}>+{nextLesson.lesson.xpReward} XP</Text>
+                </View>
+                <View style={styles.continueArrow}>
+                  <Ionicons name="arrow-forward" size={18} color="#fff" />
+                </View>
               </View>
-            </TouchableOpacity>
-          </View>
+            </LinearGradient>
+          </TouchableOpacity>
         ) : (
-          <View style={[styles.card, { backgroundColor: '#ECFDF5', alignItems: 'center' }]}>
-            <Text style={{ fontSize: 40, marginBottom: 8 }}>🎉</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#059669' }}>Tahniah! Semua pelajaran selesai!</Text>
-          </View>
+          <LinearGradient colors={[C.success, '#059669']} style={styles.allDoneCard}>
+            <Ionicons name="checkmark-circle" size={36} color="#fff" />
+            <Text style={styles.allDoneText}>Tahniah! Semua pelajaran selesai!</Text>
+          </LinearGradient>
         )}
 
-        <View style={styles.quoteCard}>
-          <Text style={{ fontSize: 20, marginBottom: 8 }}>💬</Text>
-          <Text style={{ fontSize: 15, color: '#fff', fontStyle: 'italic', lineHeight: 22, marginBottom: 6 }}>"{quote.text}"</Text>
-          <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', textAlign: 'right' }}>— {quote.author}</Text>
+        {/* ── UNIT PROGRESS ── */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Kemajuan Topik</Text>
+          {UNITS.map(unit => {
+            const d = unit.lessons.filter(l => completedLessons.includes(l.id)).length;
+            const p = unit.lessons.length > 0 ? d / unit.lessons.length : 0;
+            return (
+              <View key={unit.id} style={styles.unitRow}>
+                <View style={[styles.unitIconBox, { backgroundColor: unit.color + '15' }]}>
+                  <Text style={{ fontSize: 20 }}>{unit.emoji}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={styles.unitRowTop}>
+                    <Text style={styles.unitName}>{unit.title}</Text>
+                    <Text style={[styles.unitPct, { color: unit.color }]}>{Math.round(p * 100)}%</Text>
+                  </View>
+                  <ProgressBar progress={p} color={unit.color} height={6} style={{ borderRadius: R.full }} />
+                  <Text style={styles.unitCount}>{d}/{unit.lessons.length} pelajaran</Text>
+                </View>
+              </View>
+            );
+          })}
         </View>
 
-        <Text style={styles.sectionTitle}>Aksi Pantas</Text>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          {[
-            { icon: '📖', label: 'Mulakan\nPelajaran', screen: 'Learn', bg: '#F0FDFA' },
-            { icon: '🏆', label: 'Papan\nRanking', screen: 'Leaderboard', bg: '#FFFBEB' },
-            { icon: '👤', label: 'Profil\nSaya', screen: 'Profile', bg: '#EEF2FF' },
-          ].map(item => (
-            <TouchableOpacity key={item.screen} style={[styles.quickCard, { backgroundColor: item.bg }]}
-              onPress={() => navigation.navigate(item.screen)} activeOpacity={0.75}>
-              <Text style={{ fontSize: 28, marginBottom: 6 }}>{item.icon}</Text>
-              <Text style={{ fontSize: 11, fontWeight: '600', color: '#374151', textAlign: 'center' }}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+        {/* ── DAILY QUOTE ── */}
+        <View style={styles.quoteCard}>
+          <View style={styles.quoteIconWrap}>
+            <Ionicons name="chatbubble-ellipses" size={20} color={C.primary} />
+          </View>
+          <Text style={styles.quoteText}>"{quote.text}"</Text>
+          <Text style={styles.quoteAuthor}>— {quote.author}</Text>
         </View>
+
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F9FAFB' },
-  content: { padding: 16, paddingBottom: 32 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
-  greeting: { fontSize: 20, fontWeight: 'bold', color: '#111827' },
-  greetingSub: { fontSize: 13, color: '#6B7280', marginTop: 3 },
-  heartsRow: { flexDirection: 'row', gap: 2 },
-  statPill: { borderRadius: 16, paddingHorizontal: 14, paddingVertical: 12, marginRight: 10, alignItems: 'center', minWidth: 82 },
-  statValue: { fontSize: 18, fontWeight: 'bold' },
-  statLabel: { fontSize: 10, color: '#9CA3AF', marginTop: 2, fontWeight: '600' },
-  card: { backgroundColor: '#fff', borderRadius: 18, padding: 16, marginBottom: 14, elevation: 3, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
-  cardRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  cardTitle: { fontSize: 15, fontWeight: '700', color: '#111827' },
-  cardBadge: { fontSize: 12, fontWeight: '700', color: '#0D9488', backgroundColor: '#F0FDFA', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 },
-  bar: { height: 10, backgroundColor: '#F3F4F6', borderRadius: 5, overflow: 'hidden', marginBottom: 8 },
-  barFill: { height: '100%', backgroundColor: '#0D9488', borderRadius: 5 },
-  barNote: { fontSize: 12, color: '#9CA3AF', textAlign: 'right' },
-  continueCard: { backgroundColor: '#F9FAFB', borderRadius: 12, padding: 14, flexDirection: 'row', alignItems: 'center', borderLeftWidth: 4 },
-  xpPill: { borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5 },
-  quoteCard: { backgroundColor: '#0D9488', borderRadius: 18, padding: 20, marginBottom: 16 },
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: '#111827', marginBottom: 10 },
-  quickCard: { flex: 1, borderRadius: 16, padding: 14, alignItems: 'center', elevation: 2, shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } },
+  safe: { flex: 1, backgroundColor: C.bg },
+  scroll: { paddingBottom: 32 },
+
+  // Hero
+  hero: { paddingTop: 16, paddingBottom: 24, paddingHorizontal: 20 },
+  heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+  heroGreeting: { fontSize: 14, color: 'rgba(255,255,255,0.75)', fontWeight: '500' },
+  heroName: { fontSize: 24, fontWeight: '800', color: '#fff', marginTop: 2 },
+  heartsWrap: { flexDirection: 'row', gap: 3, paddingTop: 4 },
+
+  xpCard: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: R.md, padding: 14 },
+  xpCardRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  levelBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: R.full, paddingHorizontal: 10, paddingVertical: 4, gap: 4 },
+  levelText: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  xpLabel: { color: 'rgba(255,255,255,0.85)', fontSize: 13, fontWeight: '600' },
+  progressBg: { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: R.full, overflow: 'hidden' },
+  progressFill: { borderRadius: R.full },
+  xpNext: { color: 'rgba(255,255,255,0.6)', fontSize: 11, marginTop: 6, textAlign: 'right' },
+
+  // Stats
+  statsRow: { flexDirection: 'row', paddingHorizontal: 16, paddingTop: 16, gap: 10, marginBottom: 4 },
+  statCard: { flex: 1, borderRadius: R.md, padding: 12, alignItems: 'center', ...S.xs },
+  statIconWrap: { width: 32, height: 32, borderRadius: R.sm, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
+  statValue: { fontSize: 18, fontWeight: '800', lineHeight: 22 },
+  statLabel: { fontSize: 10, color: C.textMuted, fontWeight: '600', marginTop: 2 },
+
+  // Continue
+  continueWrap: { margin: 16, borderRadius: R.lg, overflow: 'hidden', ...S.md },
+  continueCard: { padding: 20 },
+  continueBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: 'rgba(255,255,255,0.2)', alignSelf: 'flex-start', borderRadius: R.full, paddingHorizontal: 10, paddingVertical: 4, marginBottom: 10 },
+  continueBadgeText: { color: '#fff', fontSize: 11, fontWeight: '800', letterSpacing: 0.5 },
+  continueTitle: { fontSize: 20, fontWeight: '800', color: '#fff', marginBottom: 4 },
+  continueUnit: { fontSize: 13, color: 'rgba(255,255,255,0.8)', marginBottom: 14 },
+  continueFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  xpPill: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: R.full, paddingHorizontal: 10, paddingVertical: 5 },
+  xpPillText: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  continueArrow: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+
+  allDoneCard: { margin: 16, borderRadius: R.lg, padding: 24, alignItems: 'center', gap: 10, ...S.md },
+  allDoneText: { color: '#fff', fontWeight: '700', fontSize: 16, textAlign: 'center' },
+
+  // Unit Progress
+  section: { backgroundColor: C.surface, marginHorizontal: 16, borderRadius: R.lg, padding: 16, marginBottom: 14, ...S.sm },
+  sectionTitle: { fontSize: 15, fontWeight: '700', color: C.text, marginBottom: 14 },
+  unitRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 14 },
+  unitIconBox: { width: 44, height: 44, borderRadius: R.sm, alignItems: 'center', justifyContent: 'center' },
+  unitRowTop: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
+  unitName: { fontSize: 13, fontWeight: '600', color: C.text },
+  unitPct: { fontSize: 13, fontWeight: '700' },
+  unitCount: { fontSize: 11, color: C.textMuted, marginTop: 4 },
+
+  // Quote
+  quoteCard: { backgroundColor: C.surface, marginHorizontal: 16, borderRadius: R.lg, padding: 18, ...S.sm, borderLeftWidth: 4, borderLeftColor: C.primary },
+  quoteIconWrap: { marginBottom: 10 },
+  quoteText: { fontSize: 14, color: C.textSub, lineHeight: 22, fontStyle: 'italic', marginBottom: 8 },
+  quoteAuthor: { fontSize: 12, color: C.textMuted, textAlign: 'right', fontWeight: '600' },
 });

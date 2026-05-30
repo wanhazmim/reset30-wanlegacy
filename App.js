@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 import { AppProvider, useApp } from './src/context/AppContext';
+import { C, S } from './src/theme';
 
 import SplashScreen from './src/screens/SplashScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
@@ -20,16 +22,20 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TABS = [
-  { name: 'Home', label: 'Utama', icon: '🏠', component: HomeScreen },
-  { name: 'Learn', label: 'Belajar', icon: '📚', component: LearningPathScreen },
-  { name: 'Leaderboard', label: 'Ranking', icon: '🏆', component: LeaderboardScreen },
-  { name: 'Profile', label: 'Profil', icon: '👤', component: ProfileScreen },
+  { name: 'Home',        label: 'Utama',   icon: 'home',    component: HomeScreen },
+  { name: 'Learn',       label: 'Belajar', icon: 'book',    component: LearningPathScreen },
+  { name: 'Leaderboard', label: 'Ranking', icon: 'trophy',  component: LeaderboardScreen },
+  { name: 'Profile',     label: 'Profil',  icon: 'person',  component: ProfileScreen },
 ];
 
-function TabBarIcon({ icon, focused, label }) {
+function TabIcon({ name, focused }) {
   return (
-    <View style={[styles.tabIconWrap, focused && styles.tabIconWrapActive]}>
-      <Text style={[styles.tabIcon, { opacity: focused ? 1 : 0.5 }]}>{icon}</Text>
+    <View style={[styles.tabIconWrap, focused && styles.tabIconActive]}>
+      <Ionicons
+        name={focused ? name : `${name}-outline`}
+        size={22}
+        color={focused ? C.primary : C.textMuted}
+      />
     </View>
   );
 }
@@ -40,9 +46,10 @@ function MainTabs() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: '#0D9488',
-        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarActiveTintColor: C.primary,
+        tabBarInactiveTintColor: C.textMuted,
         tabBarLabelStyle: styles.tabLabel,
+        tabBarItemStyle: styles.tabItem,
       }}
     >
       {TABS.map(tab => (
@@ -52,9 +59,7 @@ function MainTabs() {
           component={tab.component}
           options={{
             tabBarLabel: tab.label,
-            tabBarIcon: ({ focused }) => (
-              <TabBarIcon icon={tab.icon} focused={focused} label={tab.label} />
-            ),
+            tabBarIcon: ({ focused }) => <TabIcon name={tab.icon} focused={focused} />,
           }}
         />
       ))}
@@ -63,24 +68,18 @@ function MainTabs() {
 }
 
 function RootNavigator() {
-  const { isFirstTime, init } = useApp();
-
-  useEffect(() => {
-    init();
-  }, []);
+  const { init } = useApp();
+  useEffect(() => { init(); }, []);
 
   return (
     <>
       <StatusBar style="light" />
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Main" component={MainTabs} />
-        <Stack.Screen
-          name="Lesson"
-          component={LessonScreen}
-          options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
-        />
+        <Stack.Screen name="Splash"      component={SplashScreen} />
+        <Stack.Screen name="Onboarding"  component={OnboardingScreen} />
+        <Stack.Screen name="Main"        component={MainTabs} />
+        <Stack.Screen name="Lesson"      component={LessonScreen}
+          options={{ animation: 'slide_from_bottom', gestureEnabled: false }} />
       </Stack.Navigator>
     </>
   );
@@ -102,34 +101,22 @@ export default function App() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    height: 70,
+    backgroundColor: C.surface,
+    borderTopWidth: 0,
+    height: 72,
     paddingBottom: 10,
-    paddingTop: 6,
-    elevation: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
+    paddingTop: 8,
+    paddingHorizontal: 8,
+    ...S.lg,
   },
-  tabLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    marginTop: 2,
-  },
+  tabItem: { borderRadius: 16 },
+  tabLabel: { fontSize: 11, fontWeight: '600', marginTop: 2 },
   tabIconWrap: {
-    width: 36,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
+    width: 40, height: 32,
+    alignItems: 'center', justifyContent: 'center',
+    borderRadius: 12,
   },
-  tabIconWrapActive: {
-    backgroundColor: '#F0FDFA',
-  },
-  tabIcon: {
-    fontSize: 20,
+  tabIconActive: {
+    backgroundColor: C.primaryBg,
   },
 });
